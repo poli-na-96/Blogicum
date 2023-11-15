@@ -1,10 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.urls import reverse
+
 
 User = get_user_model()
 
-length_of_str = 256
+LENGTH_OF_STR = 256
 
 
 class PublishedModel(models.Model):
@@ -24,7 +24,7 @@ class PublishedModel(models.Model):
 
 class Category(PublishedModel):
     title = models.CharField(
-        max_length=length_of_str,
+        max_length=LENGTH_OF_STR,
         verbose_name='Заголовок'
     )
     description = models.TextField(verbose_name='Описание')
@@ -45,7 +45,7 @@ class Category(PublishedModel):
 
 class Location(PublishedModel):
     name = models.CharField(
-        max_length=length_of_str,
+        max_length=LENGTH_OF_STR,
         verbose_name='Название места'
     )
 
@@ -59,7 +59,7 @@ class Location(PublishedModel):
 
 class Post(PublishedModel):
     title = models.CharField(
-        max_length=length_of_str,
+        max_length=LENGTH_OF_STR,
         verbose_name='Заголовок'
     )
     text = models.TextField(verbose_name='Текст')
@@ -101,7 +101,7 @@ class Post(PublishedModel):
 
 
 class Comment(models.Model):
-    text = models.TextField('Текст комментария')
+    text = models.TextField(verbose_name='Текст комментария')
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
@@ -110,8 +110,10 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    def get_absolute_url(self):
-        return reverse('blog:post_detail', kwargs={'pk': self.pk})
-
     class Meta:
         ordering = ('created_at',)
+        verbose_name = 'комментарий'
+        verbose_name_plural = 'Комментарии'
+
+    def __str__(self):
+        return self.text
